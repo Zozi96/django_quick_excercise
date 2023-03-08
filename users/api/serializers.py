@@ -42,7 +42,7 @@ class UserAddPetSerializer(BaseModelSerializer):
 
 
 class UserPetSerializer(BaseModelSerializer):
-c    pets = PetDogSerializer(read_only=True, many=True, context={'excluded_fields': ['id']})
+    pets = PetDogSerializer(read_only=True, many=True, context={'excluded_fields': ['id']})
 
     class Meta:
         model = get_user_model()
