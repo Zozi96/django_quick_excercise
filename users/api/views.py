@@ -1,22 +1,32 @@
 from django.contrib.auth import get_user_model
-
-from rest_framework import viewsets, response, status
+from rest_framework import viewsets, response
 from rest_framework.decorators import action
-from pets.models import PetDog
+from rest_framework.request import Request
 
-from users.api.serializers import UserSerializer
+from users.api.serializers import UserCreationSerializer, UserUpdateSerializer, UserAddPetSerializer, UserPetSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = get_user_model().objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserCreationSerializer
 
-    @action(detail=True, methods=("post",))
-    def add_pet(self, request, pk=None):
-        user = self.get_object()
-        pet_id = request.data.get("pet_id")
-        pet = PetDog.objects.get(pk=pet_id)
-        pet.owners.add(user)
-        return response.Response(
-            {"message": "pet added"}, status=status.HTTP_201_CREATED
-        )
+    def get_serializer_class(self):
+        if self.action in ('update', 'partial_update'):
+            self.serializer_class = UserUpdateSerializer
+        elif self.action == 'my_pets':
+            if self.request.method == 'PUT':
+                self.serializer_class = UserAddPetSerializer
+            elif self.request.method == 'GET':
+                self.serializer_class = UserPetSerializer
+        return super().get_serializer_class()
+
+    @action(methods=('put', 'get'), detail=True, url_path='my-pets', url_name='my_pets')
+    def my_pets(self, request: Request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, )
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
+        return response.Response(serializer.data)

@@ -23,4 +23,4 @@ class PetDog(models.Model):
                 (today.month, today.day) < (self.birth_date.month, self.birth_date.day))
 
     def __str__(self) -> str:
-        return f'Gender: {self.gender} {self.weight}'
+        return f'Gender: {self.gender} Weight: {self.weight} Breed: {self.breed}'

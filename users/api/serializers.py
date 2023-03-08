@@ -1,22 +1,49 @@
 from django.contrib.auth import get_user_model
+
+from pets.api.serializers import PetDogSerializer
 from utils.serializers import BaseModelSerializer
 
 
-class UserSerializer(BaseModelSerializer):
+class UserCreationSerializer(BaseModelSerializer):
     class Meta:
         model = get_user_model()
         fields = (
-            "username",
-            "email",
-            "password",
-            "phone_number",
-            "city",
-            "pets"
+            'pk',
+            'username',
+            'email',
+            'password',
+            'phone_number',
+            'city',
         )
+        read_only_fields = ('pk',)
         extra_kwargs = {
-            "password": {"write_only": True},
-            "pets": {"required": False}
+            'password': {'write_only': True},
         }
 
     def create(self, validated_data):
         return get_user_model().objects.create_user(**validated_data)
+
+
+class UserUpdateSerializer(BaseModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = (
+            'first_name',
+            'last_name',
+            'phone_number',
+            'city'
+        )
+
+
+class UserAddPetSerializer(BaseModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ('pets',)
+
+
+class UserPetSerializer(BaseModelSerializer):
+    pets = PetDogSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = get_user_model()
+        fields = ('pets',)
