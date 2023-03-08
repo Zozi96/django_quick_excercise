@@ -23,7 +23,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(methods=('put', 'get'), detail=True, url_path='my-pets', url_name='my_pets')
     def my_pets(self, request: Request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, )
+        serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
