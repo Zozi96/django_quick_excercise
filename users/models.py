@@ -13,3 +13,5 @@ class User(AbstractUser):
     city = models.CharField(verbose_name="City", max_length=100)
     last_login = models.DateTimeField(verbose_name="Last login", auto_now=True)
     email = models.EmailField(verbose_name="Email address", unique=True)
+
+
