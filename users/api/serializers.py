@@ -31,7 +31,8 @@ class UserUpdateSerializer(BaseModelSerializer):
             'first_name',
             'last_name',
             'phone_number',
-            'city'
+            'city',
+            'profile_picture'
         )
 
 

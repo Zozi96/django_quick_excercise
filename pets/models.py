@@ -15,6 +15,7 @@ class PetDog(models.Model):
     breed = models.CharField(verbose_name='Breed', max_length=100)
     deceased_date = models.DateField(verbose_name='Deceased date', null=True, blank=True)
     owners = models.ManyToManyField(to=get_user_model(), related_name='pets')
+    profile_picture = models.FileField(verbose_name='Profile picture', upload_to='pets-profile-pictures', null=True)
 
     @property
     def age(self):
