@@ -1,3 +1,4 @@
+import datetime
 import os
 from decouple import config as env
 
@@ -28,6 +29,7 @@ DJANGO_APPS: list[str] = [
 
 THIRD_PARTY_APPS: list[str] = [
     'rest_framework',
+    'rest_framework_simplejwt'
 ]
 
 LOCAL_APPS: list[str] = [
@@ -117,4 +119,18 @@ AWS_QUERYSTRING_EXPIRE: int = env('AWS_QUERYSTRING_EXPIRE', cast=int)
 
 EXTERNAL_URLS: dict = {
     'DOG_BREEDS_URL': env('DOG_BREEDS_URL')
+}
+
+REST_FRAMEWORK: dict = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
+
+SIMPLE_JWT: dict = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=15),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=15),
 }

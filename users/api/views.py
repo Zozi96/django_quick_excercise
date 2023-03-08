@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from rest_framework import viewsets, response
+from rest_framework import viewsets, response, permissions
 from rest_framework.decorators import action
 from rest_framework.request import Request
 
@@ -9,6 +9,11 @@ from users.api.serializers import UserCreationSerializer, UserUpdateSerializer, 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = get_user_model().objects.all()
     serializer_class = UserCreationSerializer
+
+    def get_permissions(self):
+        if self.action == 'destroy':
+            self.permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser)
+        return super().get_permissions()
 
     def get_serializer_class(self):
         if self.action in ('update', 'partial_update'):
