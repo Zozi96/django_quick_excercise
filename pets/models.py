@@ -1,6 +1,10 @@
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.utils.timezone import now
 from django.contrib.auth import get_user_model
+
+from utils.picture import delete_profile_picture
 
 
 class GenderChoices(models.TextChoices):
@@ -25,3 +29,8 @@ class PetDog(models.Model):
 
     def __str__(self) -> str:
         return f'Gender: {self.gender} Weight: {self.weight} Breed: {self.breed}'
+
+
+@receiver(pre_save, sender=PetDog)
+def delete_previous_image(sender, instance, **kwargs) -> None:
+    delete_profile_picture(sender, instance)

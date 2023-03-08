@@ -1,7 +1,10 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
-
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
+from utils.picture import delete_profile_picture
 
 
 class User(AbstractUser):
@@ -14,3 +17,8 @@ class User(AbstractUser):
     last_login = models.DateTimeField(verbose_name="Last login", auto_now=True)
     email = models.EmailField(verbose_name="Email address", unique=True)
     profile_picture = models.FileField(verbose_name='Profile picture', upload_to='users-profile-pictures', null=True)
+
+
+@receiver(pre_save, sender=User)
+def delete_previous_image(sender, instance, **kwargs) -> None:
+    delete_profile_picture(sender, instance)
