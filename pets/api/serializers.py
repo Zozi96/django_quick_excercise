@@ -1,19 +1,16 @@
-from datetime import date
-
 from rest_framework import serializers
+from utils.serializers import BaseSerializer, BaseModelSerializer
 
-from pets.models import Pet
+from pets.models import PetDog
 
 
-class PetSerializer(serializers.ModelSerializer):
+class DogBreedSerializer(BaseSerializer):
+    list_breeds = serializers.ListField(read_only=True, child=serializers.CharField())
+
+
+class PetDogSerializer(BaseModelSerializer):
     age = serializers.SerializerMethodField()
 
     class Meta:
-        model = Pet
+        model = PetDog
         fields = "__all__"
-
-    def age(self):
-        """ Return the current age of the pet in years. """
-        today = date.today()
-        age = today.year - self.date_of_birth.year - ((today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day))
-        return age
