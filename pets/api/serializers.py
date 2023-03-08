@@ -9,8 +9,8 @@ class DogBreedSerializer(BaseSerializer):
 
 
 class PetDogSerializer(BaseModelSerializer):
-    age = serializers.SerializerMethodField()
+    age = serializers.ReadOnlyField()
 
     class Meta:
         model = PetDog
-        fields = "__all__"
+        exclude = ('owners',)

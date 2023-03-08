@@ -4,7 +4,10 @@ from rest_framework import exceptions
 
 
 def get_dog_breeds() -> list[str] | None:
-    url: str = 'https://dog.ceo/api/breeds/list/all'  # It's a free api to retrieve dog breeds
+    """ This function retrieves a list of dog breeds from dog.ceo's Free API
+    :return: A list of dog breeds
+    """
+    url: str = 'https://dog.ceo/api/breeds/list/all'
     r = requests.get(url)
     if r.status_code != HTTPStatus.OK:
         raise exceptions.NotFound(detail='Resource not found')
